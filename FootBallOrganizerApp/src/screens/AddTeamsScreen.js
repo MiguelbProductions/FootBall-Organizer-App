@@ -21,31 +21,35 @@ export default function AddTeamsScreen({ navigation }) {
   const [matchups, setMatchups] = useState([]);
 
   const addTeam = () => {
-    setTeams(currentTeams => [...currentTeams, { id: Math.random().toString(), name: teamName }]);
-    setTeamName('');
+    if (teamName.trim() === "") {
+      Alert.alert("Error", "Please, insert a name for Team.");
+    } else {
+      setTeams(currentTeams => [...currentTeams, { id: Math.random().toString(), name: teamName }]);
+      setTeamName('');
+    }
   };
 
   const finishTournamentCreation = () => {
     if (teams.length < 2) {
-      Alert.alert("Erro", "Você precisa adicionar pelo menos duas equipes para criar um torneio.");
+      Alert.alert("Error", "You need to add at least two teams to create a tournament.");
       return;
     }
 
     const generatedMatchups = generateMatchups(teams);
     navigation.navigate('Tournament', { matchups: generatedMatchups });
-    Alert.alert("Torneio Criado", "O torneio foi criado com sucesso!");
+    Alert.alert("Tournament Created", "The tournament was created successfully!");
   };
 
   return (
     <View style={styles.container}>
       <TextInput
-        placeholder="Nome da Equipe"
+        placeholder="Name of Team"
         value={teamName}
         onChangeText={setTeamName}
         style={styles.input}
       />
       <Button
-        title="Adicionar Equipe"
+        title="Add Team"
         onPress={addTeam}
       />
       <FlatList
@@ -64,7 +68,7 @@ export default function AddTeamsScreen({ navigation }) {
         </View>
       )}
       <Button
-        title="Finalizar Criação do Torneio"
+        title="Create Tournament"
         onPress={finishTournamentCreation}
       />
     </View>
